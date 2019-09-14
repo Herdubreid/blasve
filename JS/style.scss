@@ -1,0 +1,16 @@
+﻿$theme_colors: (
+    primary: #1ff042
+);
+
+@font-face {
+    font-family: 'AndaleMono';
+    src: url('./assets/AndaleMono.ttf'), url('./assets/andalemo.ttf');
+}
+$font-family-base: 'AndaleMono', monospace;
+
+@import '~bootstrap/scss/bootstrap';
+
+.list-group-item.active {
+    background-color: lightgreen !important;
+    color: black;
+}

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>6fb1f1ff-96ba-49dc-9934-249d5a4d9fb2</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor-State" Version="1.0.0-3.0.100-preview9-014004-105" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.1.0-preview1-10442" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Celin.AIS\Celin.AIS.csproj" />
+  </ItemGroup>
+
+</Project>
