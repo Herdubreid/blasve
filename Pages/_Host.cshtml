@@ -21,8 +21,14 @@
     </app>
 
     <script src="_framework/blazor.server.js"></script>
-    <script src="~/main.js">
-
+    <script src="~/main.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/serviceworker.js')
+                .then(function () {
+                    console.log('Service Worker Registered!');
+                });
+        }
     </script>
 </body>
 </html>
