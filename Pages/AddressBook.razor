@@ -1,0 +1,59 @@
+﻿@page "/AddressBook/{AN8}"
+@inherits BlazorStateComponent
+@inject JsService JsService
+
+<div class="container-fluid mt-5 justify-content-center">
+    @if (AppState.AddressBook == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table mt-2">
+            <tr>
+                <td>@AB.z_AT1_36.title</td>
+                <td>@AB.z_AT1_36.value</td>
+            </tr>
+            <tr>
+                <td>@AB.z_AN8_21.title</td>
+                <td>@AB.z_AN8_21.value</td>
+            </tr>
+            <tr>
+                <td>@AB.z_ALPH_28.title</td>
+                <td>@AB.z_ALPH_28.value</td>
+            </tr>
+            <tr>
+                <td>@AB.z_ADD1_40.title</td>
+                <td>@AB.z_ADD1_40.value</td>
+            </tr>
+            <tr>
+                <td>@AB.z_ADD2_42.title</td>
+                <td>@AB.z_ADD2_42.value</td>
+            </tr>
+        </table>
+    }
+    <div class="fixed-bottom p-4 overflow-auto">
+        <menu></menu>
+        <terminal></terminal>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string AN8 { get; set; }
+    protected AppState AppState => GetState<AppState>();
+    protected Data.W01012A.Form AB => AppState.AddressBook;
+    protected void StateChanged(object sender, EventArgs e) => StateHasChanged();
+    protected override void OnInitialized()
+    {
+        Mediator.Send(new AddressBookAction { AN8 = AN8 });
+        AppState.StateChanged += StateChanged;
+    }
+    async protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JsService.InitMenu("menu", new string[] { "Back", "Edit" });
+        }
+    }
+}

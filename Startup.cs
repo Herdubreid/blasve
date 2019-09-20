@@ -1,7 +1,9 @@
 using blasve.Features.AppState;
 using blasve.Services;
+using Blazor.Extensions.Storage;
 using BlazorState;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,16 +26,22 @@ namespace blasve
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor()
+                .AddCircuitOptions(opt =>
+                {
+                    opt.DetailedErrors = true;
+                });
             services.AddHttpClient();
-            services.AddScoped<TerminalService>();
-            services.AddScoped<E1Service>();
             services.AddBlazorState(
                 (options) => options.Assemblies = new Assembly[]
                 {
                     typeof(Startup).GetTypeInfo().Assembly
                 });
+            services.AddStorage();
+            services.AddScoped<AuthenticationStateProvider, AuthenticationService>();
             services.AddScoped<AppState>();
+            services.AddScoped<JsService>();
+            services.AddScoped<E1Service>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

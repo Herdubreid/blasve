@@ -9,8 +9,3 @@
 $font-family-base: 'AndaleMono', monospace;
 
 @import '~bootstrap/scss/bootstrap';
-
-.list-group-item.active {
-    background-color: lightgreen !important;
-    color: black;
-}

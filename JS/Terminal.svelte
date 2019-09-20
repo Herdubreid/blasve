@@ -41,6 +41,9 @@
                 pos = 1;
             }
             return;
+        case 27:
+            caller.invokeMethodAsync("EscapeTerminal");
+            return;
         case 37:
             pos = pos > 1 ? pos - 1 : 1;
             return;
@@ -68,6 +71,7 @@
                 pos++;
                 if (selected) {
                     removeClass(selected, 'active');
+                    roll = -1;
                     selected = null;
                 }
             }
@@ -89,10 +93,10 @@
         background-color: inherit;
         }
         50% {
-        background-color: lightgreen;
+        background-color: lightgrey;
         }
         100% {
-        background-color: darkgreen;
+        background-color: darkgrey;
         }
     }
     @keyframes blink {
@@ -100,17 +104,17 @@
         background-color: inherit;
         }
         50% {
-        background-color: lightgreen;
+        background-color: lightgrey;
         }
         100% {
-        background-color: darkgreen;
+        background-color: darkgrey;
         }
     }
 </style>
 
 <ul class="list-group" bind:this={histDiv}>
 {#each $historyStore as item}
-    <li fade:in class="list-group-item bg-dark p-1" data-an8={item.f0101_AN8}>{item.f0101_ALPH}</li>
+    <li fade:in class="list-group-item p-1" data-an8={item.f0101_AN8}>{item.f0101_ALPH}</li>
 {/each}
 </ul>
 

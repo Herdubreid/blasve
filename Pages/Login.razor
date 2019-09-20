@@ -1,0 +1,70 @@
+﻿@inject AuthenticationStateProvider ASP
+@inject JsService JsService
+@inject Blazor.Extensions.Storage.SessionStorage Storage
+
+<div class="container-fluid mt-5 justify-content-center">
+    @if (Loading)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+    <form @onsubmit=@OnSubmit>
+        <h4 class="font-weight-normal text-center">Login</h4>
+
+        <div class="form-group">
+            <label for="user">User</label>
+            <input id="user" type="text" class="form-control" placeholder="User" required autofocus @bind=@User />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" placeholder="Password" required autofocus @bind=@Password />
+        </div>
+
+        <button class="btn btn-lg btn-primary" type="submit" disabled="@Busy">
+            <span class=@Spin></span> Sign in
+        </button>
+        <div class="m-4">
+            <label class="text-danger">@Error</label>
+        </div>
+    </form>
+    }
+</div>
+
+@code {
+    protected bool Loading { get; set; } = true;
+    protected string Spin => $"{(@Busy ? "spinner-grow spinner-grow-sm" : "")}";
+    protected bool Busy { get; set; } = false;
+    protected string User { get; set; }
+    protected string Password { get; set; }
+    protected string Error { get; set; }
+    protected AuthenticationService E1 => ASP as AuthenticationService;
+    protected Celin.AIS.AuthResponse AuthResponse { get; set; }
+    protected override bool ShouldRender()
+    {
+        return AuthResponse == null;
+    }
+    async protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            AuthResponse = await Storage.GetItem<Celin.AIS.AuthResponse>("AuthResponse");
+            if (AuthResponse != null)
+            {
+                E1.E1Service.AuthResponse = AuthResponse;
+                E1.Notify();
+                JsService.InitChildWindow();
+            }
+            Loading = false;
+            StateHasChanged();
+        }
+    }
+    async protected void OnSubmit()
+    {
+        Busy = true;
+        Error = await E1.Login(User, Password);
+        await Storage.SetItem("AuthResponse", E1.E1Service.AuthResponse);
+        Busy = false;
+        StateHasChanged();
+    }
+}

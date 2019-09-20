@@ -1,5 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="content">
-    @Body
+    <AuthorizeView>
+        <NotAuthorized>
+            <blasve.Pages.Login></blasve.Pages.Login>
+        </NotAuthorized>
+        <Authorized>
+            @Body
+        </Authorized>
+    </AuthorizeView>
 </div>

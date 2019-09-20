@@ -23,7 +23,7 @@ namespace blasve.Services
         public E1Service(IConfiguration configuration, IHttpClientFactory httpClientFactory)
             : base(configuration["baseUrl"], httpClientFactory.CreateClient())
         {
-            _ = Authenticate();
+            //_ = Authenticate();
         }
     }
 }

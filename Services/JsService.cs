@@ -1,19 +1,19 @@
 ﻿using blasve.Features.AppState;
 using MediatR;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace blasve.Services
 {
-    public class TerminalService
+    public class JsService
     {
         IJSRuntime JS { get; }
         E1Service E1Service { get; }
         IMediator Mediator { get; }
-        DotNetObjectReference<TerminalService> Ref { get; }
+        DotNetObjectReference<JsService> Ref { get; }
         public event EventHandler StateChanged;
         [JSInvokable]
         async public void List(string cmd)
@@ -39,27 +39,42 @@ namespace blasve.Services
         [JSInvokable]
         async public void Command(string an8)
         {
-            await JS.InvokeVoidAsync("Terminal.BusyOn");
-            try
-            {
-                var rq = new Data.W01012A.Request(an8);
-                var rs = await E1Service.RequestAsync<Data.W01012A.Response>(rq);
-                await Mediator.Send(new AddressBookAction { AddressBook = rs.fs_P01012_W01012A.data });
-                EventHandler handler = StateChanged;
-                handler?.Invoke(this, null);
-            }
-            catch (Exception e)
-            {
-                await JS.InvokeVoidAsync("Terminal.SetMessage", e.Message);
-            }
-            await JS.InvokeVoidAsync("Terminal.BusyOff");
+            await JS.InvokeVoidAsync("Terminal.OpenWindow", "AddressBook", an8);
         }
-        public void Init(string el)
+        [JSInvokable]
+        async public Task Menu(string item)
         {
-            JS.InvokeVoidAsync("Terminal.Init", el, Ref);
-            JS.InvokeVoidAsync("Terminal.SetPrompt", "Customer:");
+            if (string.Compare(item, "Edit") == 0)
+            {
+                await JS.InvokeVoidAsync("Menu.Clear");
+                await JS.InvokeVoidAsync("Terminal.Init", Ref, "terminal");
+            }
         }
-        public TerminalService(IJSRuntime jS, E1Service e1Service, IMediator mediator)
+        [JSInvokable]
+        public void Notify(string cmd)
+        {
+            Mediator.Send(new AddressBookAction { AN8 = cmd });
+        }
+        [JSInvokable]
+        async public Task EscapeTerminal()
+        {
+            await JS.InvokeVoidAsync("Terminal.Clear");
+            await JS.InvokeVoidAsync("Menu.Init", Ref, "menu", new string[] { "Back", "Edit" });
+        }
+        async public Task InitTerminal(string el)
+        {
+            await JS.InvokeVoidAsync("Terminal.Init", Ref, el);
+            await JS.InvokeVoidAsync("Terminal.SetPrompt", "Customer:");
+        }
+        async public Task InitMenu(string el, string[] options)
+        {
+            await JS.InvokeVoidAsync("Menu.Init", Ref, el, options);
+        }
+        public void InitChildWindow()
+        {
+            JS.InvokeVoidAsync("Notification.Init", Ref);
+        }
+        public JsService(IJSRuntime jS, E1Service e1Service, IMediator mediator)
         {
             JS = jS;
             E1Service = e1Service;
