@@ -25,6 +25,17 @@ namespace blasve.Data.W01012A
     }
     public class Request : FormRequest
     {
+        public void SaveAction(Form form)
+        {
+            formServiceAction = "U";
+            formActions = new List<Action>
+            {
+                new FormAction { controlID = "28", command = FormAction.SetControlValue, value = form.z_ALPH_28.value },
+                new FormAction { controlID = "40", command = FormAction.SetControlValue, value = form.z_ADD1_40.value },
+                new FormAction { controlID = "42", command = FormAction.SetControlValue, value = form.z_ADD2_42.value },
+                new FormAction { controlID = "11", command = FormAction.DoAction }
+            };
+        }
         public Request(string an8)
         {
             formName = "P01012_W01012A";

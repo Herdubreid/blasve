@@ -10,6 +10,7 @@ namespace blasve.Features.AppState
     {
         public event EventHandler StateChanged;
         public Data.W01012A.Form AddressBook { get; set; }
+        public bool EditMode { get; set; } = false;
         protected override void Initialize() { }
     }
 }

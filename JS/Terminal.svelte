@@ -58,7 +58,11 @@
             roll = roll === -1 ? histElems.length - 1
             : ev.keyCode === 38 ? roll > 0 ? roll - 1 : roll = histElems.length - 1
             : roll >= histElems.length - 1 ? 0 : roll + 1;
-            selected = addClass(histElems[roll], 'active');
+            if (roll > -1) {
+                selected = addClass(histElems[roll], 'active');
+            } else {
+                selected = null;
+            }
             return;
         default:
             const printable = ev.key.match(/^[\d\w <>=!+-?]$/i);

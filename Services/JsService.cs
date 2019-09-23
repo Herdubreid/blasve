@@ -47,13 +47,13 @@ namespace blasve.Services
             if (string.Compare(item, "Edit") == 0)
             {
                 await JS.InvokeVoidAsync("Menu.Clear");
-                await JS.InvokeVoidAsync("Terminal.Init", Ref, "terminal");
+                await Mediator.Send(new EditModeAction { EditMode = true });
             }
         }
         [JSInvokable]
         public void Notify(string cmd)
         {
-            Mediator.Send(new AddressBookAction { AN8 = cmd });
+            Mediator.Send(new AddressBookAction { AN8 = cmd, RowAction = RowAction.Get });
         }
         [JSInvokable]
         async public Task EscapeTerminal()
